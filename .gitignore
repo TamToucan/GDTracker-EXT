@@ -1,0 +1,12 @@
+/bin/
+/.godot/
+/build/
+/*.a
+/*.so
+/*.dll
+/*.pdb
+/*.obj
+/*.lib
+/.vs/
+/.vscode/
+*.gen.*

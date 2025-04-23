@@ -1,0 +1,20 @@
+{
+    "version": 3,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 20,
+        "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "mingw64",
+            "displayName": "MinGW 64-bit",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build",
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "d:/Tools/MinGW/bin/gcc.exe",
+                "CMAKE_CXX_COMPILER": "d:/Tools/MinGW/bin/g++.exe"
+            }
+        }
+    ]
+}
