@@ -1,5 +1,6 @@
 /bin/
 /.godot/
+/.settings/
 /build/
 /*.a
 /*.so
