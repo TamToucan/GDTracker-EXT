@@ -1,42 +1,66 @@
-#ifndef GD_TRACKER_H
-#define GD_TRACKER_H
+#ifndef _GDTRACKER_HPP_
+#define _GDTRACKER_HPP_
 
+#include <godot_cpp/classes/node.hpp>
+#include <functional>
+#include <unordered_map>
 #include <mutex>
-#include <godot_cpp/classes/node2d.hpp>
-#include <godot_cpp/classes/ref_counted.hpp>
-#include <godot_cpp/core/binder_common.hpp>
+
+
+#ifdef _WIN32
+#define GDTRACKER_EXPORT __declspec(dllexport)
+#else
+#define GDTRACKER_EXPORT
+#endif
 
 using namespace godot;
 
-class GDTracker : public RefCounted {
-    GDCLASS(GDTracker, RefCounted);
+class GDTRACKER_EXPORT GDTracker : public Object {
+    GDCLASS(GDTracker, Object);
 
 private:
     mutable std::mutex mutex;
+    std::unordered_map<Node*, void*> tracked_nodes;
+    std::function<void(Node*, void*)> untrack_callback;
 
-    // Store both nodes and associated context data
-    std::unordered_map<Node2D*, Variant> tracked_nodes;
+    void _cleanup_node(Node* node);
 
 protected:
     static void _bind_methods();
 
+    // Signal handlers
+    void _on_node_ready(Node* node);
+    void _on_node_exit_tree(Node* node);
+
 public:
-    void trackNode(Node2D* node, const Variant& ctx = Variant());
-    void untrackNode(Node2D *node);
-    Array getTrackedNodes() const;
-    bool isTracking(Node2D *node) const;
+    // Godot-exposed methods
+    void track_node(Node* node);
+    void untrack_node(Node* node);
+    bool is_tracking(Node* node) const;
 
-    // Context management
-    Variant getContext(Node2D* node) const;
-    void setContext(Node2D* node, const Variant& ctx);
+    // C++ Client API
+    template<typename T>
+    void setContext(Node* node, T* context) {
+        std::lock_guard<std::mutex> lock(mutex);
+        if (tracked_nodes.count(node)) {
+            tracked_nodes[node] = static_cast<void*>(context);
+        }
+    }
 
-    // Signal callbacks
-    void _on_node_ready(Node2D* node);
-    void _on_node_exit_tree(Node2D* node);
+    template<typename T>
+    T* getContext(Node* node) const {
+        std::lock_guard<std::mutex> lock(mutex);
+        auto it = tracked_nodes.find(node);
+        return (it != tracked_nodes.end()) ? static_cast<T*>(it->second) : nullptr;
+    }
+
+    void set_untrack_callback(std::function<void(Node*, void*)> callback) {
+        std::lock_guard<std::mutex> lock(mutex);
+        untrack_callback = callback;
+    }
 
     GDTracker();
-    ~GDTracker();
+    ~GDTracker() override;
 };
 
-#endif // GD_TRACKER_H
-
+#endif
