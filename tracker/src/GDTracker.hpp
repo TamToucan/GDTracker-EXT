@@ -15,13 +15,15 @@
 
 using namespace godot;
 
-class GDTRACKER_EXPORT GDTracker : public Object {
-    GDCLASS(GDTracker, Object);
+class GDTRACKER_EXPORT GDTracker : public RefCounted {
+    GDCLASS(GDTracker, RefCounted);
 
 private:
     mutable std::mutex mutex;
     std::unordered_map<Node*, void*> tracked_nodes;
     std::function<void(Node*, void*)> untrack_callback;
+
+    static GDTracker* g_tracker;
 
     void _cleanup_node(Node* node);
 
@@ -39,6 +41,11 @@ public:
     bool is_tracking(Node* node) const;
 
     // C++ Client API
+    static GDTracker* getInstance() {
+        std::cout << "====== GET INSTANCE: " << &g_tracker << " => " << g_tracker << "=========" << std::endl;
+        return g_tracker;
+    }
+
     template<typename T>
     void setContext(Node* node, T* context) {
         std::lock_guard<std::mutex> lock(mutex);

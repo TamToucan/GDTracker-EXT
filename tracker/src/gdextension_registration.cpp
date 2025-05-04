@@ -8,14 +8,15 @@
 using namespace godot;
 
 void initialize_libgdtracker(ModuleInitializationLevel p_level) {
-	if (p_level != MODULE_INITIALIZATION_LEVEL_SCENE) {
+	if (p_level != MODULE_INITIALIZATION_LEVEL_CORE) {
 		return;
 	}
+	std::cout << "########### REGISTER GFTracker" << std::endl;
 	ClassDB::register_class<GDTracker>();
 }
 
 void uninitialize_libgdtracker(ModuleInitializationLevel p_level) {
-	if (p_level != MODULE_INITIALIZATION_LEVEL_SCENE) {
+	if (p_level != MODULE_INITIALIZATION_LEVEL_CORE) {
 		return;
 	}
 }
@@ -29,7 +30,7 @@ GDExtensionBool GDE_EXPORT libgdtracker_init(GDExtensionInterfaceGetProcAddress 
 
 	init_obj.register_initializer(initialize_libgdtracker);
 	init_obj.register_terminator(uninitialize_libgdtracker);
-	init_obj.set_minimum_library_initialization_level(MODULE_INITIALIZATION_LEVEL_SCENE);
+	init_obj.set_minimum_library_initialization_level(MODULE_INITIALIZATION_LEVEL_CORE);
 
 	return init_obj.init();
 }

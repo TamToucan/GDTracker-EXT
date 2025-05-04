@@ -19,9 +19,22 @@ target_include_directories(${LIB_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src"
 					                   PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/inc")
 target_link_libraries(${LIB_NAME} PUBLIC godot::cpp)
 
-add_custom_command(
-        TARGET ${LIB_NAME}  POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy
-                ${CMAKE_CURRENT_BINARY_DIR}/$<TARGET_FILE_NAME:${LIB_NAME}>
-			    "D:/git/the-lott/addons/gdtracker/bin")
+##################################
+# NOTE: We DONT copy this to the addon dir.
+# The dll here is somehow difference from the one created and linked with
+# the gddistanceMap.dll and so g_tracker is different
+# The dll build here: GET GLOBAL: 0x7ffbf7735020
+#   GDDistanceMap::setTracker is called
+# The g_tracker it gets from GDTracker::getInstance: 0x7ffbfaf96020 => null for tracker
+#
+
+# Copy it to the gddistanceMap since it's dll looks for it in the same directory
+#set(LOTT_ADON_DIR "D:/git/the-lott/addons/gddistanceMap/bin")
+#add_custom_command(
+        #TARGET ${LIB_NAME}  POST_BUILD
+        #COMMAND ${CMAKE_COMMAND} -E make_directory
+        #${LOTT_ADON_DIR}
+        #COMMAND ${CMAKE_COMMAND} -E copy
+                #${CMAKE_CURRENT_BINARY_DIR}/$<TARGET_FILE_NAME:${LIB_NAME}>
+                #${LOTT_ADON_DIR})
 

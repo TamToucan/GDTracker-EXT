@@ -1,5 +1,7 @@
 #include "GDTracker.hpp"
 
+GDTracker* GDTracker::g_tracker = nullptr;
+
 void GDTracker::_bind_methods() {
     ClassDB::bind_method(D_METHOD("track_node", "node"), &GDTracker::track_node);
     ClassDB::bind_method(D_METHOD("untrack_node", "node"), &GDTracker::untrack_node);
@@ -12,11 +14,16 @@ void GDTracker::_bind_methods() {
 }
 
 GDTracker::GDTracker() {
-    // Constructor implementation
-}
-
+	std::cout << "=========1 MADE TRACKER: " << this << "=========" << std::endl;
+	std::cerr << "=========1 MADE TRACKER: " << this << "=========" << std::endl;
+    g_tracker = this;
+	std::cout << "=========1 GET GLOBAL: " << &g_tracker << "=========" << std::endl;
+	std::cerr << "=========1 GET GLOBAL: " << &g_tracker << "=========" << std::endl;
+} 
 GDTracker::~GDTracker() {
     std::lock_guard<std::mutex> lock(mutex);
+    g_tracker = nullptr;;
+
     for (auto it = tracked_nodes.begin(); it != tracked_nodes.end(); ) {
         Node* node = it->first;
         _cleanup_node(node);
@@ -39,6 +46,7 @@ void GDTracker::_cleanup_node(Node* node) {
 }
 
 void GDTracker::track_node(Node* node) {
+    std::cout << "#########TRACK_NODE: " << node << " using tracker: " << this << std::endl;
     ERR_FAIL_NULL(node);
     std::lock_guard<std::mutex> lock(mutex);
 
