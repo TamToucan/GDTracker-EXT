@@ -1,6 +1,6 @@
 #include "GDTracker.hpp"
 
-GDTracker* GDTracker::g_tracker = nullptr;
+GDTRACKER_API GDTracker* GDTracker::g_tracker = nullptr;
 
 void GDTracker::_bind_methods() {
     ClassDB::bind_method(D_METHOD("track_node", "node"), &GDTracker::track_node);

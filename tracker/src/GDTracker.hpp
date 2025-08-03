@@ -6,16 +6,15 @@
 #include <unordered_map>
 #include <mutex>
 
-
-#ifdef _WIN32
-#define GDTRACKER_EXPORT __declspec(dllexport)
+#ifdef GDTracker_EXPORTS
+#define GDTRACKER_API __declspec(dllexport) // Export when building ExtA
 #else
-#define GDTRACKER_EXPORT
+#define GDTRACKER_API __declspec(dllimport) // Import otherwise
 #endif
 
 using namespace godot;
 
-class GDTRACKER_EXPORT GDTracker : public RefCounted {
+class GDTRACKER_API GDTracker : public RefCounted {
     GDCLASS(GDTracker, RefCounted);
 
 private:
@@ -42,14 +41,13 @@ public:
 
     // C++ Client API
     static GDTracker* getInstance() {
-        std::cout << "====== GET INSTANCE: " << &g_tracker << " => " << g_tracker << "=========" << std::endl;
         return g_tracker;
     }
 
     template<typename T>
     void setContext(Node* node, T* context) {
         std::lock_guard<std::mutex> lock(mutex);
-        if (tracked_nodes.count(node)) {
+        if (! tracked_nodes.count(node)) {
             tracked_nodes[node] = static_cast<void*>(context);
         }
     }

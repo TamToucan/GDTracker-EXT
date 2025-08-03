@@ -13,7 +13,10 @@ ELSE()
     SET(LIB_NAME GDTracker.debug) 
 ENDIF(CMAKE_BUILD_TYPE MATCHES RELEASE)
 
+
 add_library(${LIB_NAME} SHARED ${SOURCES})
+
+target_compile_definitions(${LIB_NAME} PRIVATE ${PROJECT_NAME}_EXPORTS)
 
 target_include_directories(${LIB_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src"
 					                   PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/inc")
