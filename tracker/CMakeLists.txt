@@ -8,11 +8,12 @@ file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS
         "${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
         
+add_library(${LIB_NAME} SHARED ${SOURCES})
+
 target_include_directories(${LIB_NAME} PUBLIC
     "${CMAKE_CURRENT_SOURCE_DIR}/src"
 )
 
-add_library(${LIB_NAME} SHARED ${SOURCES})
 
 # This was in before submodules
 # target_compile_definitions(${LIB_NAME} PRIVATE ${PROJECT_NAME}_EXPORTS)
