@@ -1,4 +1,5 @@
 project(GDTracker)
+SET(LIB_NAME GDTracker) 
 
 # Automatically pick up files added to src
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS
@@ -7,20 +8,15 @@ file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS
         "${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
         
-IF(CMAKE_BUILD_TYPE MATCHES RELEASE)
-    SET(LIB_NAME GDTracker.release) 
-ELSE()
-    SET(LIB_NAME GDTracker.debug) 
-ENDIF(CMAKE_BUILD_TYPE MATCHES RELEASE)
-
-
 add_library(${LIB_NAME} SHARED ${SOURCES})
 
-target_compile_definitions(${LIB_NAME} PRIVATE ${PROJECT_NAME}_EXPORTS)
+target_include_directories(${LIB_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
 
-target_include_directories(${LIB_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src"
-					                   PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/inc")
-target_link_libraries(${LIB_NAME} PUBLIC godot::cpp)
+# This was in before submodules
+# target_compile_definitions(${LIB_NAME} PRIVATE ${PROJECT_NAME}_EXPORTS)
+
+target_link_libraries(${LIB_NAME}
+	PUBLIC godot::cpp)
 
 ##################################
 # NOTE: We DONT copy this to the addon dir.
