@@ -14,7 +14,6 @@ target_include_directories(${LIB_NAME} PUBLIC
     "${CMAKE_CURRENT_SOURCE_DIR}/src"
 )
 
-
 # This was in before submodules
 # target_compile_definitions(${LIB_NAME} PRIVATE ${PROJECT_NAME}_EXPORTS)
 
@@ -31,6 +30,7 @@ target_link_libraries(${LIB_NAME}
 #
 
 # Copy it to the gddistanceMap since it's dll looks for it in the same directory
+
 #set(LOTT_ADON_DIR "D:/git/the-lott/addons/gddistanceMap/bin")
 #add_custom_command(
         #TARGET ${LIB_NAME}  POST_BUILD
