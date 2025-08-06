@@ -10,6 +10,12 @@ file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS
         
 add_library(${LIB_NAME} SHARED ${SOURCES})
 
+set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME ${LIB_NAME})
+if(NOT MSVC)
+	set_target_properties(${LIB_NAME} PROPERTIES PREFIX "")
+endif()
+
+
 target_include_directories(${LIB_NAME} PUBLIC
     "${CMAKE_CURRENT_SOURCE_DIR}/src"
 )

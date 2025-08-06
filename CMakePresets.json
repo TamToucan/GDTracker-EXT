@@ -13,8 +13,44 @@
             "binaryDir": "${sourceDir}/build",
             "cacheVariables": {
                 "CMAKE_C_COMPILER": "d:/Tools/MinGW/bin/gcc.exe",
-                "CMAKE_CXX_COMPILER": "d:/Tools/MinGW/bin/g++.exe"
+                "CMAKE_CXX_COMPILER": "d:/Tools/MinGW/bin/g++.exe",
+                "CMAKE_CXX_STANDARD": "17",
+                "CMAKE_CXX_STANDARD_REQUIRED": "ON",
+                "CMAKE_CXX_EXTENSIONS": "OFF",
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_CXX_FLAGS": "-g -O0"
+            }
+        },
+        {
+            "name": "msvc",
+            "displayName": "MSVC x64",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build-msvc",
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "cl.exe",
+                "CMAKE_CXX_COMPILER": "cl.exe",
+                "CMAKE_CXX_STANDARD": "17",
+                "CMAKE_CXX_STANDARD_REQUIRED": "ON",
+                "CMAKE_CXX_EXTENSIONS": "OFF",
+                "CMAKE_BUILD_TYPE": "Debug"
+            },
+            "environment": {
+                "CC": "cl",
+                "CXX": "cl"
+            }
+        },
+	{
+            "name": "customer",
+            "displayName": "Ccustom compiler path",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/custom",
+            "cacheVariables": {
+                "CMAKE_CXX_STANDARD": "17",
+                "CMAKE_CXX_STANDARD_REQUIRED": "ON",
+                "CMAKE_CXX_EXTENSIONS": "OFF",
+                "CMAKE_BUILD_TYPE": "Debug"
             }
         }
     ]
 }
+
