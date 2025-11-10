@@ -11,7 +11,7 @@ void initialize_libgdtracker(ModuleInitializationLevel p_level) {
 	if (p_level != MODULE_INITIALIZATION_LEVEL_CORE) {
 		return;
 	}
-	std::cout << "########### REGISTER GFTracker" << std::endl;
+	std::cerr << "INFO: ################# REGISTER GDTracker" << std::endl;
 	ClassDB::register_class<GDTracker>();
 }
 

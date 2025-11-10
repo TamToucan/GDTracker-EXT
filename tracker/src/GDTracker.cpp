@@ -1,6 +1,6 @@
 #include "GDTracker.hpp"
 
-GDTRACKER_API GDTracker* GDTracker::g_tracker = nullptr;
+GDTracker* GDTracker::g_tracker = nullptr;
 
 void GDTracker::_bind_methods() {
     ClassDB::bind_method(D_METHOD("track_node", "node"), &GDTracker::track_node);
@@ -14,21 +14,20 @@ void GDTracker::_bind_methods() {
 }
 
 GDTracker::GDTracker() {
-	std::cout << "=========1 MADE TRACKER: " << this << "=========" << std::endl;
-	std::cerr << "=========1 MADE TRACKER: " << this << "=========" << std::endl;
     g_tracker = this;
-	std::cout << "=========1 GET GLOBAL: " << &g_tracker << "=========" << std::endl;
-	std::cerr << "=========1 GET GLOBAL: " << &g_tracker << "=========" << std::endl;
+	std::cerr << "=x=x=x===1 STORE TRACKER IN GLOBAL ADDR: " << &g_tracker << " => " << g_tracker << std::endl;
 } 
 GDTracker::~GDTracker() {
     std::lock_guard<std::mutex> lock(mutex);
     g_tracker = nullptr;;
-
+/* TODO: I get a segv if I cleanup the nodes an untrack them.
+ *  If the tracker is being destroyed then "probably" doesn't matter
     for (auto it = tracked_nodes.begin(); it != tracked_nodes.end(); ) {
         Node* node = it->first;
         _cleanup_node(node);
         it = tracked_nodes.erase(it);
     }
+    */
 }
 
 void GDTracker::_cleanup_node(Node* node) {

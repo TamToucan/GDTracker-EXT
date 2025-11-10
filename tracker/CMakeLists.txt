@@ -9,8 +9,11 @@ file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS
         "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
         
 add_library(${LIB_NAME} SHARED ${SOURCES})
+add_library(GDTracker::Tracker ALIAS GDTracker)
 
-set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME ${LIB_NAME})
+set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME ${LIB_NAME}
+        DEFINE_SYMBOL "GDTracker_EXPORTS")
+
 if(NOT MSVC)
 	set_target_properties(${LIB_NAME} PROPERTIES PREFIX "")
 endif()
