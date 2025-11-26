@@ -15,8 +15,8 @@ void GDTracker::_bind_methods() {
 
 GDTracker::GDTracker() {
     g_tracker = this;
-	std::cerr << "=x=x=x===1 STORE TRACKER IN GLOBAL ADDR: " << &g_tracker << " => " << g_tracker << std::endl;
 } 
+
 GDTracker::~GDTracker() {
     std::lock_guard<std::mutex> lock(mutex);
     g_tracker = nullptr;;
