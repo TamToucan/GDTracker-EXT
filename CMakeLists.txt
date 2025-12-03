@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 
 if (NOT ALL_SUBS_BUILD_ON)
-    project(gdextension-tracker)
+    project(tracker-lib)
     
     set(FETCHCONTENT_QUIET OFF)
     set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -22,7 +22,7 @@ if (NOT ALL_SUBS_BUILD_ON)
  
     FetchContent_MakeAvailable(GDExtension)
 else()
-    message(STATUS "GDTracker-EXT is being built as part of Lott-EXT, skipping FetchContent.")
+	message(STATUS "Tracker-LIB is being built as part of Lott-EXT, skipping FetchContent.")
 endif()
 
 add_subdirectory(tracker)
