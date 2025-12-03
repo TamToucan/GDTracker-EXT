@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 
 if (NOT ALL_SUBS_BUILD_ON)
-    project(tracker-lib)
+    project(Tracker-Lib)
     
     set(FETCHCONTENT_QUIET OFF)
     set(CMAKE_EXPORT_COMPILE_COMMANDS ON)

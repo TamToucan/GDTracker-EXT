@@ -1,4 +1,4 @@
-project(GDTracker)
+project(Tracker-Lib)
 SET(LIB_NAME GDTracker) 
 
 # Automatically pick up files added to src
