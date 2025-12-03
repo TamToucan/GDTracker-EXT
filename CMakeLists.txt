@@ -22,7 +22,7 @@ if (NOT ALL_SUBS_BUILD_ON)
  
     FetchContent_MakeAvailable(GDExtension)
 else()
-	message(STATUS "Tracker-LIB is being built as part of Lott-EXT, skipping FetchContent.")
+	message(STATUS "Tracker-LIB is being built as part of Lott-Libs, skipping FetchContent.")
 endif()
 
 add_subdirectory(tracker)
