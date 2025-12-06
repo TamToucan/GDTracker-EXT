@@ -1,51 +1,104 @@
 project(Tracker-Lib)
-SET(LIB_NAME GDTracker) 
 
-# Automatically pick up files added to src
-file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS
-        "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h"
-        "${CMAKE_CURRENT_SOURCE_DIR}/src/*.C"
-        "${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp"
-        "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
+# Core tracker lib
+set(TRACKER_LIB_NAME tracker)
+file(GLOB_RECURSE TRACKER_SOURCES CONFIGURE_DEPENDS
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/core/*.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/core/*.C"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/core/*.hpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/core/*.cpp")
         
-add_library(${LIB_NAME} SHARED ${SOURCES})
-add_library(GDTracker::Tracker ALIAS GDTracker)
+add_library(${TRACKER_LIB_NAME} SHARED ${TRACKER_SOURCES})
+add_library(TrackerLib::Tracker ALIAS ${TRACKER_LIB_NAME})
 
-set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME ${LIB_NAME}
-        DEFINE_SYMBOL "GDTracker_EXPORTS")
+
+set_target_properties(${TRACKER_LIB_NAME} PROPERTIES OUTPUT_NAME ${TRACKER_LIB_NAME}
+        DEFINE_SYMBOL "Tracker_EXPORTS")
 
 if(NOT MSVC)
-	set_target_properties(${LIB_NAME} PROPERTIES PREFIX "")
+	set_target_properties(${TRACKER_LIB_NAME} PROPERTIES PREFIX "")
+endif()
+
+target_include_directories(${TRACKER_LIB_NAME} PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/core>
+    $<INSTALL_INTERFACE:include>
+)
+
+##################
+# Godot tracker lib
+set(GDTRACKER_LIB_NAME GDTracker)
+file(GLOB_RECURSE GDTRACKER_SOURCES CONFIGURE_DEPENDS
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/godot/*.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/godot/*.C"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/godot/*.hpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/godot/*.cpp")
+        
+add_library(${GDTRACKER_LIB_NAME} SHARED ${GDTRACKER_SOURCES})
+add_library(TrackerLib::GDTracker ALIAS ${GDTRACKER_LIB_NAME})
+
+set_target_properties(${GDTRACKER_LIB_NAME} PROPERTIES OUTPUT_NAME ${GDTRACKER_LIB_NAME}
+	DEFINE_SYMBOL "GDTracker_EXPORTS")
+
+if(NOT MSVC)
+	set_target_properties(${GDTRACKER_LIB_NAME} PROPERTIES PREFIX "")
 endif()
 
 
-target_include_directories(${LIB_NAME} PUBLIC
-    "${CMAKE_CURRENT_SOURCE_DIR}/src"
+target_include_directories(${GDTRACKER_LIB_NAME} PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/godot>
+    $<INSTALL_INTERFACE:include>
 )
+
 
 # This was in before submodules
 # target_compile_definitions(${LIB_NAME} PRIVATE ${PROJECT_NAME}_EXPORTS)
 
-target_link_libraries(${LIB_NAME}
+target_link_libraries(${GDTRACKER_LIB_NAME}
+	PRIVATE TrackerLib::Tracker
 	PUBLIC godot::cpp)
 
 ##################################
-# NOTE: We DONT copy this to the addon dir.
-# The dll here is somehow difference from the one created and linked with
-# the gddistanceMap.dll and so g_tracker is different
-# The dll build here: GET GLOBAL: 0x7ffbf7735020
-#   GDDistanceMap::setTracker is called
-# The g_tracker it gets from GDTracker::getInstance: 0x7ffbfaf96020 => null for tracker
-#
+# Installation and Export
 
-# Copy it to the gddistanceMap since it's dll looks for it in the same directory
+include(GNUInstallDirs)
 
-#set(LOTT_ADON_DIR "D:/git/the-lott/addons/gddistanceMap/bin")
-#add_custom_command(
-        #TARGET ${LIB_NAME}  POST_BUILD
-        #COMMAND ${CMAKE_COMMAND} -E make_directory
-        #${LOTT_ADON_DIR}
-        #COMMAND ${CMAKE_COMMAND} -E copy
-                #${CMAKE_CURRENT_BINARY_DIR}/$<TARGET_FILE_NAME:${LIB_NAME}>
-                #${LOTT_ADON_DIR})
+# Install targets
+# Install targets
+install(TARGETS ${TRACKER_LIB_NAME}
+    EXPORT TrackerLibTargets
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
 
+install(TARGETS ${GDTRACKER_LIB_NAME}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+
+# Install headers
+install(DIRECTORY src/core/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/tracker/core FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp")
+install(DIRECTORY src/godot/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/tracker/godot FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp")
+
+# Export targets
+install(EXPORT TrackerLibTargets
+    FILE TrackerLibTargets.cmake
+    NAMESPACE TrackerLib::
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/TrackerLib
+)
+
+# Create Config file (simplified)
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+    "${CMAKE_CURRENT_BINARY_DIR}/TrackerLibConfigVersion.cmake"
+    VERSION 1.0.0
+    COMPATIBILITY AnyNewerVersion
+)
+
+install(FILES
+    "${CMAKE_CURRENT_BINARY_DIR}/TrackerLibConfigVersion.cmake"
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/TrackerLib
+)
