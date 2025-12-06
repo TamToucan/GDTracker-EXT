@@ -10,17 +10,21 @@ if (NOT ALL_SUBS_BUILD_ON)
     set(CMAKE_CXX_STANDARD_REQUIRED ON)
     set(CMAKE_POSITION_INDEPENDENT_CODE ON)
     
-    set(FETCHCONTENT_BASE_DIR ${CMAKE_BINARY_DIR}/_deps)
+    option(BUILD_GODOT_TRACKER "Build Godot wrapper library" ON)
+
+    if(BUILD_GODOT_TRACKER)
+        set(FETCHCONTENT_BASE_DIR ${CMAKE_BINARY_DIR}/_deps)
+        
+        include(FetchContent)
+        
+        FetchContent_Declare(
+                GDExtension
+                GIT_REPOSITORY https://github.com/godotengine/godot-cpp.git
+                GIT_TAG godot-4.3-stable
+        )
     
-    include(FetchContent)
-    
-    FetchContent_Declare(
-            GDExtension
-            GIT_REPOSITORY https://github.com/godotengine/godot-cpp.git
-            GIT_TAG godot-4.3-stable
-    )
- 
-    FetchContent_MakeAvailable(GDExtension)
+        FetchContent_MakeAvailable(GDExtension)
+    endif()
 else()
 	message(STATUS "Tracker-LIB is being built as part of Lott-Libs, skipping FetchContent.")
 endif()

@@ -1,5 +1,4 @@
 #include "GDTracker.hpp"
-#include <iostream>
 
 GDTracker *g_gdtracker = nullptr;
 

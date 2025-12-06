@@ -24,6 +24,7 @@ target_include_directories(${TRACKER_LIB_NAME} PUBLIC
     $<INSTALL_INTERFACE:include>
 )
 
+if(BUILD_GODOT_TRACKER)
 ##################
 # Godot tracker lib
 set(GDTRACKER_LIB_NAME GDTracker)
@@ -56,7 +57,7 @@ target_include_directories(${GDTRACKER_LIB_NAME} PUBLIC
 target_link_libraries(${GDTRACKER_LIB_NAME}
 	PRIVATE TrackerLib::Tracker
 	PUBLIC godot::cpp)
-
+endif()
 ##################################
 # Installation and Export
 
@@ -72,16 +73,20 @@ install(TARGETS ${TRACKER_LIB_NAME}
     INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
+if(BUILD_GODOT_TRACKER)
 install(TARGETS ${GDTRACKER_LIB_NAME}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
+endif()
 
 # Install headers
 install(DIRECTORY src/core/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/tracker/core FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp")
+if(BUILD_GODOT_TRACKER)
 install(DIRECTORY src/godot/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/tracker/godot FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp")
+endif()
 
 # Export targets
 install(EXPORT TrackerLibTargets
