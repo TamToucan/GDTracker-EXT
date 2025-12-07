@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 
+option(BUILD_GODOT_TRACKER "Build Godot wrapper library" ON)
+
 if (NOT ALL_SUBS_BUILD_ON)
     project(Tracker-Lib)
     
@@ -10,8 +12,6 @@ if (NOT ALL_SUBS_BUILD_ON)
     set(CMAKE_CXX_STANDARD_REQUIRED ON)
     set(CMAKE_POSITION_INDEPENDENT_CODE ON)
     
-    option(BUILD_GODOT_TRACKER "Build Godot wrapper library" ON)
-
     if(BUILD_GODOT_TRACKER)
         set(FETCHCONTENT_BASE_DIR ${CMAKE_BINARY_DIR}/_deps)
         
