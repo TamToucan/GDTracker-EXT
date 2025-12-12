@@ -1,4 +1,5 @@
 #include "GDTracker.hpp"
+#include <godot_cpp/core/object.hpp>
 
 GDTracker *g_gdtracker = nullptr;
 
@@ -27,14 +28,19 @@ GDTracker::~GDTracker() {
 
 GDTracker *GDTracker::getInstance() { return g_gdtracker; }
 
+// Helper to get ID as void*
+static void *get_id(Node *node) {
+  return reinterpret_cast<void *>(node->get_instance_id());
+}
+
 void GDTracker::track_node(Node *node) {
-  // std::cout << "#########TRACK_NODE: " << node << std::endl;
   ERR_FAIL_NULL(node);
 
   if (is_tracking(node))
     return;
 
-  Tracker::instance().track(node);
+  void *id = get_id(node);
+  Tracker::instance().track(id);
 
   node->connect("ready", Callable(this, "_on_node_ready").bind(node));
   node->connect("tree_exited", Callable(this, "_on_node_exit_tree").bind(node));
@@ -47,6 +53,7 @@ void GDTracker::untrack_node(Node *node) {
 
   if (!is_tracking(node))
     return;
+  void *id = get_id(node);
 
   // Disconnect first?
   if (node->is_connected("ready", Callable(this, "_on_node_ready")))
@@ -54,13 +61,13 @@ void GDTracker::untrack_node(Node *node) {
   if (node->is_connected("tree_exited", Callable(this, "_on_node_exit_tree")))
     node->disconnect("tree_exited", Callable(this, "_on_node_exit_tree"));
 
-  Tracker::instance().untrack(node);
+  Tracker::instance().untrack(id);
   emit_signal("node_removed", node);
 }
 
 bool GDTracker::is_tracking(Node *node) const {
   ERR_FAIL_NULL_V(node, false);
-  return Tracker::instance().is_tracking(node);
+  return Tracker::instance().is_tracking(get_id(node));
 }
 
 void GDTracker::_on_node_ready(Node *node) {
@@ -78,7 +85,10 @@ void GDTracker::set_untrack_callback(
   // Adapt the typed callback to void* callback
   Tracker::instance().set_untrack_callback([callback](void *obj, void *ctx) {
     if (callback) {
-      callback(static_cast<Node *>(obj), ctx);
+      uint64_t id = (uint64_t)reinterpret_cast<uintptr_t>(obj);
+      Object *instance = ObjectDB::get_instance(id);
+      Node *node = Object::cast_to<Node>(instance);
+      callback(node, ctx);
     }
   });
 }

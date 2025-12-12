@@ -41,16 +41,16 @@ public:
 
   template <typename T> void setContext(Node *node, T *context) {
     if (node) {
-      Tracker::instance().set_context(static_cast<void *>(node),
-                                      static_cast<void *>(context));
+      void *id = reinterpret_cast<void *>(node->get_instance_id());
+      Tracker::instance().set_context(id, static_cast<void *>(context));
     }
   }
 
   template <typename T> T *getContext(Node *node) const {
     if (!node)
       return nullptr;
-    return static_cast<T *>(
-        Tracker::instance().get_context(static_cast<void *>(node)));
+    void *id = reinterpret_cast<void *>(node->get_instance_id());
+    return static_cast<T *>(Tracker::instance().get_context(id));
   }
 
   void set_untrack_callback(std::function<void(Node *, void *)> callback);

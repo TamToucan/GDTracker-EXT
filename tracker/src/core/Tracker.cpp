@@ -32,8 +32,9 @@ void Tracker::update() {
 }
 
 void Tracker::track(void *obj, void *context) {
-  if (!obj)
+  if (!obj) {
     return;
+  }
   std::lock_guard<std::mutex> lock(mutex);
   if (tracked_objects.find(obj) == tracked_objects.end()) {
     tracked_objects[obj] = context;
