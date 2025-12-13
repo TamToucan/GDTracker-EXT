@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.20)
 
+if(DEFINED BUILD_GODOT)
+    set(BUILD_GODOT_TRACKER ${BUILD_GODOT})
+endif()
 option(BUILD_GODOT_TRACKER "Build Godot wrapper library" ON)
 
 if (NOT ALL_SUBS_BUILD_ON)
