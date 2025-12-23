@@ -1,13 +1,3 @@
-/bin/
-/.godot/
-/.settings/
 /build/
-/*.a
-/*.so
-/*.dll
-/*.pdb
-/*.obj
-/*.lib
 /.vs/
-/.vscode/
-*.gen.*
+deps
