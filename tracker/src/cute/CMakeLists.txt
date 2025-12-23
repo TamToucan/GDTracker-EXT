@@ -18,6 +18,5 @@ endif()
 
 # Link to the sibling 'Tracker' target
 target_link_libraries(${CUTETRACKER_LIB_NAME}
-	PRIVATE TrackerLib::Tracker cute
-)
+	PRIVATE Tracker cute_lib)
 

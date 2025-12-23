@@ -45,14 +45,16 @@ if(NOT ALL_SUBS_BUILD_ON)
         set(CUTE_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/deps/cute")
         if(EXISTS "${CUTE_ROOT}/lib/libcute.a")
             set(CUTE_FOUND ON)
-            add_library(cute STATIC IMPORTED GLOBAL)
-            set_target_properties(cute PROPERTIES
-                IMPORTED_LOCATION "${CUTE_ROOT}/lib/libcute.a"
-                INTERFACE_INCLUDE_DIRECTORIES "${CUTE_ROOT}/include;${CUTE_ROOT}"
-            )
-            file(GLOB CUTE_DEPENDENCIES "${CUTE_ROOT}/lib/*.a")
-            list(REMOVE_ITEM CUTE_DEPENDENCIES "${CUTE_ROOT}/lib/libcute.a")
-            set_target_properties(cute PROPERTIES INTERFACE_LINK_LIBRARIES "${CUTE_DEPENDENCIES}")
+            if(NOT TARGET cute_lib)
+                add_library(cute STATIC IMPORTED GLOBAL)
+                set_target_properties(cute PROPERTIES
+                    IMPORTED_LOCATION "${CUTE_ROOT}/lib/libcute.a"
+                    INTERFACE_INCLUDE_DIRECTORIES "${CUTE_ROOT}/include;${CUTE_ROOT}"
+                )
+                file(GLOB CUTE_DEPENDENCIES "${CUTE_ROOT}/lib/*.a")
+                list(REMOVE_ITEM CUTE_DEPENDENCIES "${CUTE_ROOT}/lib/libcute.a")
+                set_target_properties(cute PROPERTIES INTERFACE_LINK_LIBRARIES "${CUTE_DEPENDENCIES}")
+            endif()
         endif()
     endif()
 
