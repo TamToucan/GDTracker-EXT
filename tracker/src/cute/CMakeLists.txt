@@ -20,3 +20,15 @@ endif()
 target_link_libraries(${CUTETRACKER_LIB_NAME}
 	PRIVATE Tracker cute_lib)
 
+# Windows: Copy dependencies next to CuteTracker so tests can run
+add_custom_command(TARGET ${CUTETRACKER_LIB_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    $<TARGET_FILE:Tracker>
+    $<TARGET_FILE_DIR:${CUTETRACKER_LIB_NAME}>
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    $<TARGET_FILE:cute>
+    $<TARGET_FILE_DIR:${CUTETRACKER_LIB_NAME}>
+)
+
+
+
