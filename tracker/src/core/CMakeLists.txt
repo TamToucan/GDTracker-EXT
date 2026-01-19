@@ -13,10 +13,6 @@ add_library(${TRACKER_LIB_NAME} SHARED ${TRACKER_SOURCES})
 target_include_directories(${TRACKER_LIB_NAME} PUBLIC
     "${CMAKE_CURRENT_SOURCE_DIR}"    # . (src/core)
     "${CMAKE_CURRENT_SOURCE_DIR}/.." # .. (src)
-    # Common Deps
-    "${CMAKE_BINARY_DIR}/_deps/libs-src/lib/MathStuff"
-    "${CMAKE_BINARY_DIR}/_deps/libs-src/lib/Algo"
-    "${CMAKE_BINARY_DIR}/_deps/libs-src/lib/Util"
 )
 
 # Properties
@@ -28,4 +24,5 @@ endif()
 # Linking (Tracker likely depends on Algo/Math)
 target_link_libraries(${TRACKER_LIB_NAME}
     PRIVATE Algo MathStuff
+    PUBLIC Util
 )
