@@ -39,6 +39,13 @@ if(NOT ALL_SUBS_BUILD_ON)
     else()
         FetchContent_MakeAvailable(Libs)
     endif()
+    
+    # LOTT: Fix for "multiple definition of pthread_mutex_lock" (MinGW)
+    if(TARGET Util)
+        message(STATUS "LOTT [Standalone]: Applying exports fix for Util.")
+        set_target_properties(Util PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS OFF)
+        target_link_options(Util PRIVATE "LINKER:--exclude-libs,ALL")
+    endif()
 
     # 3. Setup Cute (Standalone Mode)
     if(BUILD_CUTE)
